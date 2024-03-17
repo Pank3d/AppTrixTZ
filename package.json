@@ -10,13 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.28.4",
     "firebase": "^10.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.1",
-    "react-router-dom": "^6.22.3"
+    "react-notifications": "^1.7.4",
+    "react-notifications-component": "^4.0.1",
+    "react-router-dom": "^6.22.3",
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.27.7",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.1.1",

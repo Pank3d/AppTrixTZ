@@ -1,5 +1,6 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../app/fireBase";
+import { auth } from "../../app/fireBase";
+import { toast } from "react-toastify";
 
 export const validatePassword = (value: string) => {
   const isValidPassword =
@@ -10,7 +11,7 @@ export const validatePassword = (value: string) => {
   );
 };
 
-export const createUser =  async({
+export const createUser = async ({
   emailValue,
   passwordValue,
 }: {
@@ -28,3 +29,7 @@ export const createUser =  async({
   }
 };
 
+
+  export const showNotify = () => {
+    toast("Успешно зарегистрованы теперь необходимо авторизоваться");
+  }; 

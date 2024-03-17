@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { createUser, validatePassword } from "./utils";
 import { useNavigate } from "react-router-dom";
+import { createUser, showNotify, validatePassword } from "../utils";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUp = () => {
   const {
@@ -21,11 +22,13 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const emailValue = watch("email");
   const passwordValue = watch("password");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const validatePasswordRepeat = (value: string) => {
     return value === passwordValue || "Пароли не совпадают";
   };
+
+
 
   return (
     <div className="flex flex-col gap-5 w-full h-screen justify-center text-center">
@@ -69,7 +72,7 @@ const SignUp = () => {
         />
       </label>
       {errors.passwordRepeat && <p>{errors.passwordRepeat.message}</p>}{" "}
-      <label>
+      <label className="text-xl">
         <input
           type="checkbox"
           checked={showPassword}
@@ -81,11 +84,15 @@ const SignUp = () => {
         className="text-xl"
         onClick={handleSubmit(() => {
           reset();
+          showNotify();
           createUser({ emailValue, passwordValue });
-          navigate("/")
+          navigate("/sign-in");
         })}
       >
         Зарегистрироваться
+      </button>
+      <button onClick={() => navigate("/sign-in")} className="text-xl">
+        Уже зарегистрирован
       </button>
     </div>
   );
