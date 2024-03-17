@@ -3,3 +3,7 @@ export  interface formDataInter {
     password:string,
     
 }
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+}

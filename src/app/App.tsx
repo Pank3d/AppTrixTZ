@@ -1,20 +1,35 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+
+import Menu from "../pages/Menu/Menu";
+import { useAuth } from "../pages/Auth/AuthContext";
 import SignUp from "../pages/Auth/SignUp/SignUp";
 import SignIn from "../pages/Auth/SignIn/SignIn";
-import Menu from "../pages/Menu/Menu";
 
 function App() {
-  return <>
-  <Router>
-    <div>
+  const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated)
+
+  
+  return (
+    <Router>
       <Routes>
-        <Route path="/sign-up" element = {<SignUp/>}/>
-        <Route path="/sign-in" element = {<SignIn/>}/>
-        <Route path="/" element = {<Menu/>} />
+        {isAuthenticated ? (
+          <Route path="/" element={<Menu />} />
+        ) : (
+          <>
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="*" element={<Navigate to="/sign-in" />} />
+          </>
+        )}
       </Routes>
-    </div>
-  </Router>
-  </>;
+    </Router>
+  );
 }
 
 export default App;

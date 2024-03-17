@@ -1,9 +1,10 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { auth } from "../../../app/fireBase";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { signInWithEmailAndPassword, Auth } from "firebase/auth";
+import { useAuth } from "../AuthContext";
 
 const SignIn = () => {
   const {
@@ -19,36 +20,40 @@ const SignIn = () => {
       passwordRepeat: "",
     },
   });
-
+  
+  const { setIsAuthenticated } = useAuth();
   const emailValue = watch("email");
   const passwordValue = watch("password");
   const [error, setError] = useState<string | null>();
   const navigate = useNavigate();
 
-  const signInAccount = async ({
-    emailValue,
-    passwordValue,
-  }: {
-    emailValue: string;
-    passwordValue: string;
-  }) => {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        emailValue,
-        passwordValue
-      );
-
-      const user = userCredential.user;
-      const idToken = await user.getIdToken();
-      localStorage.setItem("idToken", idToken);
-      setError(null);
-    } catch (error) {
-      setError("Неверный логин или пароль");
-    }
-  };
+ const signInAccount = async ({
+   emailValue,
+   passwordValue,
+ }: {
+   emailValue: string;
+   passwordValue: string;
+ }) => {
+   try {
+     const userCredential = await signInWithEmailAndPassword(
+       auth as Auth,
+       emailValue,
+       passwordValue
+     );
+     const user = userCredential.user;
+     const idToken = await user.getIdToken();
+     localStorage.setItem("idToken", idToken);
+     setIsAuthenticated(true);
+     setError(null);
+     navigate("/");
+   } catch (error) {
+     setError("Неверный логин или пароль");
+   }
+ };
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <>
       <ToastContainer />
@@ -91,12 +96,17 @@ const SignIn = () => {
         </label>
         <button
           className="text-xl"
-          onClick={handleSubmit(() => {
-            reset();
-            signInAccount({ passwordValue, emailValue });
+          onClick={handleSubmit(async () => {
+            setIsLoading(true);
+            try {
+              await signInAccount({ passwordValue, emailValue });
+              reset();
+            } finally {
+              setIsLoading(false);
+            }
           })}
         >
-          Войти
+          {isLoading ? "Вход..." : "Войти"}
         </button>
         <button onClick={() => navigate("/sign-up")} className="text-xl">
           Еще не зарегестрированы
