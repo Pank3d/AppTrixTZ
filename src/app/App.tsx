@@ -1,35 +1,36 @@
+// App.tsx
+
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   Navigate,
 } from "react-router-dom";
-
 import Menu from "../pages/Menu/Menu";
-import { useAuth } from "../pages/Auth/AuthContext";
 import SignUp from "../pages/Auth/SignUp/SignUp";
 import SignIn from "../pages/Auth/SignIn/SignIn";
+import { useAuth } from "../pages/Auth/AuthContext";
+import { useEffect } from "react";
 
-function App() {
+const App = () => {
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated)
 
-  
+  useEffect(() => {
+    console.log("Is authenticated:", isAuthenticated);
+  }, [isAuthenticated]);
+
   return (
     <Router>
       <Routes>
-        {isAuthenticated ? (
-          <Route path="/" element={<Menu />} />
-        ) : (
-          <>
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="*" element={<Navigate to="/sign-in" />} />
-          </>
-        )}
+        <Route
+          path="/"
+          element={isAuthenticated ? <Menu /> : <Navigate to="/sign-in" />}
+        />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<SignIn />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;
